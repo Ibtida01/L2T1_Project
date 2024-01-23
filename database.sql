@@ -1,0 +1,7 @@
+CREATE DATABASE cf;
+
+CREATE TABLE Handles (
+    userID SERIAL PRIMARY KEY,
+    Handle VARCHAR(255),
+    password VARCHAR(255)
+);
