@@ -44,7 +44,7 @@ const LoginPage = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '20px', position: 'relative' }}>
-      <img src={require('./Images/codeforceLogo.jpg')} alt="Codeforces Logo" />
+      <img src={require('../Assets/Images/codeforceLogo.jpg')} alt="Codeforces Logo" />
       <p>
         <b>Fill in the form to log in to Codeforces. You can use Gmail as an alternative way to enter.</b>
         <br />

@@ -33,7 +33,7 @@ const ProfilePage = () => {
       {userProfile ? (
         <div>
           <img
-            src={require('./Images/codeforceLogo.jpg')}
+            src={require('../Assets/Images/codeforceLogo.jpg')}
             alt="Codeforces Logo"
             style={{ transform: 'scale(0.8)', position: 'absolute', top: '0', left: '0' }}
           />
@@ -52,7 +52,7 @@ const ProfilePage = () => {
               <b>
                 <h2 style={{ color: userProfile.color }}>{userProfile.color}</h2>
                 <h3>{userProfile.user_name}</h3>
-                <img src={require('./Images/userPhoto.jpg')} alt="Avatar" style={{ position: 'middle', width: '100px', height: '100px' }} />
+                <img src={require('../Assets/Images/userPhoto.jpg')} alt="Avatar" style={{ position: 'middle', width: '100px', height: '100px' }} />
                 <p>Email: {userProfile.email}</p>
                 <p>Current Rating: {userProfile.current_rating}</p>
                 <p>Max Rating: {userProfile.max_rating}</p>
