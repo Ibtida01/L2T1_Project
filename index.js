@@ -1,70 +1,66 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
-const pool = require('./db');
+const pool = require('./db'); // Make sure to have your db.js file that exports a pool object
 
-//middleware
+const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-//ROUTES//
+// Routes
 
-//create a todo
+// Sign Up
+app.post('/signup', async (req, res) => {
+  try {
+    const { user_name, password, email } = req.body;
+    const userName = await pool.query(
+      'INSERT INTO users (user_name, password, email, color, current_rating, max_rating, country, institution, contribution, problems_solved) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      [user_name, password, email, 'grey', 0, 0, 'Unspecified', 'Unspecified', 0, 0]
+    );
+    console.log(`Signing up with username: ${user_name}, password: ${password}, and email: ${email}`, userName.rows[0]);
+    res.json(userName.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Login
 app.post('/login', async (req, res) => {
-        try{
-            console.log(req.body);//logs the request body in the console
-            const {description} = req.body;//destructure the request body
-            const newTodo = await pool.query("INSERT INTO todo (description) VALUES($1) RETURNING *", [description]);
-            //the RETURNING * returns the data that was just inserted
-            res.json(newTodo.rows[0]);//return the data that was just inserted
-        } catch (err) {
-            console.error(err.message);
-        }
-    });
-    
-//print all todos
-app.get('/todosList', async (req, res) => {
-    try{
-        const allTodos = await pool.query("SELECT * FROM todo");
-        res.json(allTodos.rows);
-    } catch (err) {
-        console.error(err.message);
+  try {
+    const { user_name, password } = req.body;
+    const result = await pool.query('SELECT * FROM users WHERE user_name = $1 AND password = $2', [user_name, password]);
+    console.log(`Logging in with username: ${user_name} and password: ${password}`, result.rows[0]);
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]);
+      console.log('Login successful');
+    } else {
+      res.status(401).json({ error: 'Invalid username or password' });
     }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-//get a specific todo
-app.get('/todos/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [id]);
-        res.json(todo.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-app.listen(5000, () => {
-  console.log('Server listening on port 5000');
+// User Profile
+app.get('/userprofile', async (req, res) => {
+  try {
+    const { user_name } = req.query; // Change to req.query to get parameters from the query string
+
+    // Fetch user profile data based on user_name
+    const userProfileData = await pool.query('SELECT * FROM users WHERE user_name = $1', [user_name]);
+    console.log('Fetching user profile:', userProfileData.rows[0]);
+    res.json(userProfileData.rows[0]);
+  } catch (error) {
+    console.error('Error fetching user profile:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-//update a specific todo
-app.put('/todos/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const {description} = req.body;
-        const updateTodo = await pool.query("UPDATE todo SET description = $1 WHERE todo_id = $2", [description, id]);
-        res.json("Todo was updated");
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-//delete a specific todo
-app.delete('/todos/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const deleteTodo = await pool.query("DELETE FROM todo WHERE todo_id = $1", [id]);
-        res.json("Todo was deleted");
-    } catch (err) {
-        console.error(err.message);
-    }
+// Start the server
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

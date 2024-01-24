@@ -1,0 +1,32 @@
+/* client/src/styles/HomePage.css */
+
+.home-page {
+    text-align: center;
+  }
+  
+  .header {
+    background-color: #61dafb;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .options-bar {
+    display: flex;
+  }
+  
+  .option {
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  .profile-option {
+    cursor: pointer;
+  }
+  
+  .content {
+    margin-top: 20px;
+  }
+  
