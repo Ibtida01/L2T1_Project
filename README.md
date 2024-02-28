@@ -12,7 +12,7 @@ features:
  signup handle
  update personal profile info
  submit solutions
- submit blogs
+ submit blogs 
  upvote/downvote blogs
  rating changes
  leaderboard
